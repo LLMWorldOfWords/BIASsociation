@@ -21,6 +21,15 @@ pip install -r requirements.txt
 
 The scripts locate the *data* folder relative to their own location, so they can be run from any working directory, e.g. `python reproducibility/BiasEval_analyses.py`.
 
+#### R environment
+*SpreadingActivation.r* was run with R 4.3.2 and the packages [spreadr](https://cran.r-project.org/package=spreadr) 0.2.0 and [igraph](https://cran.r-project.org/package=igraph) 1.5.1. To install these exact versions:
+
+```r
+install.packages("remotes")
+remotes::install_version("igraph", version = "1.5.1")
+remotes::install_version("spreadr", version = "0.2.0")
+```
+
 The *reproducibility* folder contains the following:
 - *BiasEval_analyses.py* used first to generate lists of prime nodes and then to conduct the bias evaluation analyses using the activation level matrices
 - *mindset_streams.py* used to plot the mindset streams (shortest paths between gender primes and the targets *compassionate* and *forceful*) for each network with EmoAtlas, saving them as .png files in *figures/mindset_streams*. The script fixes Python's hash seed so that the plots are identical on every run
