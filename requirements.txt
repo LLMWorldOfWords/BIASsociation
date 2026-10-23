@@ -1,0 +1,13 @@
+# Python 3.11. Install with: pip install -r requirements.txt
+# emoatlas 0.2.0 is not on PyPI; pinned to the GitHub commit used for the paper figures
+emoatlas @ git+https://github.com/MassimoStel/emoatlas@7b8133769fed0f948740d6f02f9bed7ed0528424
+matplotlib==3.8.0
+networkx==3.1
+numpy==1.26.0
+pandas==2.1.1
+scikit-learn==1.5.2
+scipy==1.11.3
+seaborn==0.13.2
+spacy==3.6.1
+statsmodels==0.14.5
+en_core_web_lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.6.0/en_core_web_lg-3.6.0-py3-none-any.whl

@@ -1,5 +1,6 @@
 
 
+import os
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -14,11 +15,9 @@ import seaborn as sns
 from matplotlib.lines import Line2D
 import matplotlib.patches as mpatches
 from matplotlib.patches import Patch
-#pip -q install git+https://github.com/MassimoStel/emoatlas
-import spacy
-nlp = spacy.load('en_core_web_lg')
-from emoatlas import EmoScores
-emo = EmoScores(language="english")
+
+# Data folder next to this script, so it runs from any working directory
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 ##########################################################################
 
@@ -47,7 +46,7 @@ def edgelist2graph(path, directed = False):
 models = ['Humans', 'Mistral', 'Llama3', 'Haiku']
 FA_graphs_filt = {}
 for model in models:
-    path = './data/graphs/edge_lists/FA_' + model + '_edgelist.csv'
+    path = DATA_DIR + '/graphs/edge_lists/FA_' + model + '_edgelist.csv'
     FA_graphs_filt[model] = edgelist2graph(path, directed = False)
 
 # Find node intersection of graphs
@@ -74,15 +73,15 @@ for word in gender_Primes + rel_eth_sex_Primes + political_Primes:
         print(word)
 
 # Save primes
-pd.DataFrame({'biasPrime':gender_Primes}).to_csv('./data/primes_targets/gender_primes.csv', index = False)
-pd.DataFrame({'biasPrime':rel_eth_sex_Primes}).to_csv('./data/primes_targets/rel_eth_sex_primes.csv', index = False)
-pd.DataFrame({'biasPrime':political_Primes}).to_csv('./data/primes_targets/political_primes.csv', index = False)
+pd.DataFrame({'biasPrime':gender_Primes}).to_csv(DATA_DIR + '/primes_targets/gender_primes.csv', index = False)
+pd.DataFrame({'biasPrime':rel_eth_sex_Primes}).to_csv(DATA_DIR + '/primes_targets/rel_eth_sex_primes.csv', index = False)
+pd.DataFrame({'biasPrime':political_Primes}).to_csv(DATA_DIR + '/primes_targets/political_primes.csv', index = False)
 
 ##########################################################################
 # Stereotypes analyses: gender
 
 # Load the gender targets
-targets = pd.read_csv('./data/primes_targets/gender_targets.csv')
+targets = pd.read_csv(DATA_DIR + '/primes_targets/gender_targets.csv')
 tgts_F = [x for x in list(targets['Female']) if x in nodeIntFull]
 tgts_M = [x for x in list(targets['Male'])if x in nodeIntFull]
 
@@ -99,7 +98,7 @@ primes_M = [x[1] for x in genderPrimePairs]
 # Load results of spreading activation processes
 gender_dfs = {}
 for model in models:
-    gender_dfs[model] = pd.read_csv('./data/AL_matrices/' + model + '_gender.csv')
+    gender_dfs[model] = pd.read_csv(DATA_DIR + '/AL_matrices/' + model + '_gender.csv')
 
 # Function to format matrices
 def formatMat(df):
@@ -239,19 +238,7 @@ def heatmapsGender(dfF, dfM, model, modelColorPalettes):
 for model in models:
     heatmapsGender(matGender[model]['Female-related targets'], matGender[model]['Male-related targets'], model, modelColorPalettes)
 
-# Mindset streams
-def mindsetStreams(start_node, end_node, network):
-    emo.plot_mindset_stream(
-    graph = list(FA_graphs_filt[network].edges()),
-    start_node=start_node,
-    end_node=end_node,
-    title = network,
-    figsize=(12, 7),
-    custom_font=14,
-    #custom_x_offset = 0,
-    marginset=0.15
-)
-mindsetStreams('feminine','compassionate','Humans')
+# Mindset streams: see mindset_streams.py
 
 ##########################################################################
 # Valence analyses: religion, ethnicity, sexual orientation
@@ -264,7 +251,7 @@ primes_dict = {'religion': ['christian', 'muslim', 'buddhist', 'jewish', 'atheis
 # Load results of spreading activation processes
 rel_eth_sex_dfs = {}
 for model in models:
-    rel_eth_sex_dfs[model] = pd.read_csv('./data/AL_matrices/' + model + '_rel_eth_sex.csv')
+    rel_eth_sex_dfs[model] = pd.read_csv(DATA_DIR + '/AL_matrices/' + model + '_rel_eth_sex.csv')
 
 def loadTextFile(filename):
     file = open(filename, 'r')
@@ -279,7 +266,7 @@ def loadTextFile(filename):
     return output
 
 # Load valence data
-VAD = loadTextFile('./data/valence_emotions/NRC-VAD-Lexicon.txt')
+VAD = loadTextFile(DATA_DIR + '/valence_emotions/NRC-VAD-Lexicon.txt')
 VAD_Dict = {'valence': {}, 'arousal': {}, 'dominance': {}}
 for item in VAD:
     VAD_Dict['valence'][item[0]] = item[1]
@@ -454,7 +441,7 @@ plt.show()
 # Load results of spreading activation processes
 political_dfs = {}
 for model in models:
-    political_dfs[model] = pd.read_csv('./data/AL_matrices/' + model + '_political.csv')
+    political_dfs[model] = pd.read_csv(DATA_DIR + '/AL_matrices/' + model + '_political.csv')
     
 def loadData(filename):
     with open(filename, 'r') as json_file:
@@ -466,7 +453,7 @@ def loadData(filename):
     return output
 
 # Load emotions data
-emotions = loadData('./data/valence_emotions/emotions.json')
+emotions = loadData(DATA_DIR + '/valence_emotions/emotions.json')
 emoDictEmpty = {'fear':[],
            'sadness': [],
            'surprise': [],

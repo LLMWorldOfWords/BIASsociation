@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.env
+.vscode/
+
+# Human network: not redistributable (SWOW licence), each user builds it locally
+reproducibility/data/graphs/edge_lists/FA_Humans_edgelist.csv
+reproducibility/data/graphs/igraphs/FA_Humans_ig.graphml
